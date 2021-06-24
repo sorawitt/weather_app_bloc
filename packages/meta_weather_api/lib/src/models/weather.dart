@@ -1,33 +1,83 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'weather.g.dart';
+
 enum WeatherState {
-  snow,
-  sleet,
-  hail,
-  thunderstorm,
-  heavyRain,
-  lightRain,
-  showers,
-  heaverCloud,
-  lightCloud,
-  clear,
-  unknown
+@JsonValue('sn')
+snow,
+@JsonValue('sl')
+sleet,
+@JsonValue('h')
+hail,
+@JsonValue('t')
+thunderstorm,
+@JsonValue('hr')
+heavyRain,
+@JsonValue('lr')
+lightRain,
+@JsonValue('s')
+showers,
+@JsonValue('hc')
+heavyCloud,
+@JsonValue('lc')
+lightCloud,
+@JsonValue('c')
+clear,
+unknown
+}
+
+extension WeatherStateX on WeatherState {
+  String? get abbr => _$WeatherStateEnumMap[this];
 }
 
 enum WindDirectionCompass {
-  north,
-  northEast,
-  east,
-  southEast,
-  south,
-  southWest,
-  west,
-  northWest,
-  unknown
+@JsonValue('N')
+north,
+@JsonValue('NE')
+northEast,
+@JsonValue('E')
+east,
+@JsonValue('SE')
+southEast,
+@JsonValue('S')
+south,
+@JsonValue('SW')
+southWest,
+@JsonValue('W')
+west,
+@JsonValue('NW')
+northWest,
+unknown,
 }
 
+@JsonSerializable()
 class Weather {
+  const Weather({
+    required this.id,
+    required this.weatherStateName,
+    required this.weatherStateAbbr,
+    required this.windDirectionCompass,
+    required this.created,
+    required this.applicableDate,
+    required this.minTemp,
+    required this.maxTemp,
+    required this.theTemp,
+    required this.windSpeed,
+    required this.windDirection,
+    required this.airPressure,
+    required this.humidity,
+    required this.visibility,
+    required this.predictability,
+  });
+
+  factory Weather.fromJson(Map<String, dynamic> json) =>
+      _$WeatherFromJson(json);
+
   final int id;
   final String weatherStateName;
+  @JsonKey(unknownEnumValue: WeatherState.unknown)
   final WeatherState weatherStateAbbr;
+  @JsonKey(unknownEnumValue: WindDirectionCompass.unknown)
   final WindDirectionCompass windDirectionCompass;
   final DateTime created;
   final DateTime applicableDate;
@@ -40,21 +90,4 @@ class Weather {
   final int humidity;
   final double visibility;
   final int predictability;
-
-  Weather(
-      this.id,
-      this.weatherStateName,
-      this.weatherStateAbbr,
-      this.windDirectionCompass,
-      this.created,
-      this.applicableDate,
-      this.minTemp,
-      this.maxTemp,
-      this.theTemp,
-      this.windSpeed,
-      this.windDirection,
-      this.airPressure,
-      this.humidity,
-      this.visibility,
-      this.predictability);
 }
